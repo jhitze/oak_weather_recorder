@@ -17,16 +17,16 @@ func init() {
 }
 
 func main() {
-	var username, password string
-	fmt.Print("Enter username: ")
-	fmt.Scanln(&username)
-	fmt.Print("Enter password: ")
-	fmt.Scanln(&password)
+	settings := &OakWeatherSettings{}
+	var err error
+	settings, err = findSettings()
+	if err != nil {
+		logger.Println("Could not read settings file. reason:", err)
+		logger.Println("Reverting to asking for the settings.")
+		settings, err = askForSettings()
+	}
 
-	accessToken := retrieveAccessToken(username, password)
-	deviceList := retrieveDevices(accessToken)
-	device := askWhichDevice(deviceList)
-	listenForWeatherEvents(device, accessToken)
+	listenForWeatherEvents(settings.SelectedDevice, settings.AccessToken)
 }
 
 func listenForWeatherEvents(device Device, accessToken string) {
@@ -41,18 +41,4 @@ func listenForWeatherEvents(device Device, accessToken string) {
 		data_decoded := NewWeatherData(event.Data)
 		logger.Println(data_decoded.asString())
 	}
-}
-
-func askWhichDevice(deviceList []Device) Device {
-	var deviceNumber int
-	fmt.Println("Found Devices")
-	fmt.Println("----------------------------------------")
-	for number, device := range deviceList {
-		fmt.Printf("%d: %s - Online->%t\n", number, device.Name, device.Connected)
-	}
-	fmt.Println("----------------------------------------")
-	fmt.Println("Pick a number:")
-	fmt.Scanln(&deviceNumber)
-	logger.Printf("Device %s picked.", deviceList[deviceNumber].Name)
-	return deviceList[deviceNumber]
 }

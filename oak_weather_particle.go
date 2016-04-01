@@ -72,6 +72,34 @@ func retrieveDevices(accessToken string) []Device {
 	return deviceList
 }
 
+func retrieveDevice(accessToken, deviceId string) (*Device, error) {
+	logger.Println("Getting current information for device:", deviceId)
+	device := Device{}
+	var devices_url = "https://api.particle.io/v1/devices/" + deviceId
+
+	req, err := http.NewRequest("GET",
+		devices_url,
+		nil)
+
+	req.Header.Add("Authorization", "Bearer "+accessToken)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonerr := json.Unmarshal(body, &device)
+	if jsonerr != nil {
+		return nil, jsonerr
+	}
+
+	return &device, nil
+}
+
 type OauthTokenResponse struct {
 	Access_token  string
 	Token_type    string
