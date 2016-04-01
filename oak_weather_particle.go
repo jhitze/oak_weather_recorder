@@ -15,7 +15,6 @@ func retrieveAccessToken(username, password string) string {
 	data.Set("grant_type", "password")
 	data.Set("username", username)
 	data.Set("password", password)
-	data.Set("expires_in", "10")
 
 	req, err := http.NewRequest("POST",
 		oauth_url,
@@ -70,6 +69,34 @@ func retrieveDevices(accessToken string) []Device {
 	}
 
 	return deviceList
+}
+
+func retrieveDevice(accessToken, deviceId string) (*Device, error) {
+	logger.Println("Getting current information for device:", deviceId)
+	device := Device{}
+	var devices_url = "https://api.particle.io/v1/devices/" + deviceId
+
+	req, err := http.NewRequest("GET",
+		devices_url,
+		nil)
+
+	req.Header.Add("Authorization", "Bearer "+accessToken)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	jsonerr := json.Unmarshal(body, &device)
+	if jsonerr != nil {
+		return nil, jsonerr
+	}
+
+	return &device, nil
 }
 
 type OauthTokenResponse struct {

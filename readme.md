@@ -15,8 +15,14 @@ go build *.go
 ```
 
 ## In action
+
+First time:
+
 ```
 ./OakWeatherRecorder 
+2016/03/31 22:32:59.685253 Going to attempt to load data from oak_weather.json
+2016/03/31 22:32:59.685519 Could not read settings file. reason: open oak_weather.json: no such file or directory
+2016/03/31 22:32:59.685532 Reverting to asking for the settings.
 Enter username: user@example.com
 Enter password: *******************
 Found Devices
@@ -26,8 +32,19 @@ Found Devices
 ----------------------------------------
 Pick a number:
 1
-2016/03/30 23:15:44.027142 Device oak-weather picked.
-2016/03/30 23:15:44.103949 Connected to the stream of device oak-weather (--sanitized, device id was here--)
-2016/03/30 23:15:48.279596 Temperature: 19.79°C, Ambient: 11.33%, Pressure: 1005.64 mbar, Humidity: 54.10%
-2016/03/30 23:15:58.673257 Temperature: 19.80°C, Ambient: 11.33%, Pressure: 1005.61 mbar, Humidity: 54.06%
+2016/03/31 22:33:15.804334 Device oak-weather picked.
+2016/03/31 22:33:15.804353 Going to attempt to save settings to oak_weather.json
+2016/03/31 22:33:15.804701 Saved successfully for next time!
+2016/03/31 22:33:16.016650 Connected to the stream of device oak-weather (--sanitized, device id was here--)
+2016/03/31 22:33:20.936188 Temperature: 20.57°C, Ambient: 7.03%, Pressure: 1001.15 mbar, Humidity: 54.84%
+```
+
+Second time (or any time there is a proper JSON settings file)
+
+```
+./OakWeatherRecorder 
+2016/03/31 22:33:27.777095 Going to attempt to load data from oak_weather.json
+2016/03/31 22:33:27.777414 Getting current information for device: --sanitized, device id was here--
+2016/03/31 22:33:28.377079 Connected to the stream of device oak-weather (--sanitized, device id was here--)
+2016/03/31 22:33:31.376787 Temperature: 20.51°C, Ambient: 5.08%, Pressure: 1001.21 mbar, Humidity: 54.97%
 ```
