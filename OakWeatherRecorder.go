@@ -24,6 +24,7 @@ func main() {
 		logger.Println("Could not read settings file. reason:", err)
 		logger.Println("Reverting to asking for the settings.")
 		settings, err = askForSettings()
+		saveSettings(*settings)
 	}
 
 	listenForWeatherEvents(settings.SelectedDevice, settings.AccessToken)

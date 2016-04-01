@@ -40,6 +40,24 @@ func findSettings() (*OakWeatherSettings, error) {
 	return &settings, nil
 }
 
+func saveSettings(settings OakWeatherSettings) error {
+	filename := "oak_weather.json"
+	logger.Println("Going to attempt to save settings to", filename)
+
+	data, err := json.Marshal(&settings)
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(filename, data, 0644)
+	if err != nil {
+		return err
+	}
+	logger.Println("Saved successfully for next time!")
+
+	return nil
+}
+
 func askWhichDevice(deviceList []Device) Device {
 	var deviceNumber int
 	fmt.Println("Found Devices")
