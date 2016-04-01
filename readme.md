@@ -1,6 +1,9 @@
 # Oak Weather Recorder
 The neatest way to record data published over from the Oak Shield over the Particle network.
 
+## Inspiration
+https://github.com/who93/oak_weathershield
+
 ## How to build
 
 ```
