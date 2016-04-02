@@ -88,8 +88,10 @@ void fetchAmbient()
 
 void setup(void)
 {
-  pinMode(Sleep_pin, INPUT_PULLUP); // Use pullup mode to default HIGH
+}
 
+void loop(void)
+{
   htu.begin();
   if (!bmp.begin())
   {
@@ -102,13 +104,5 @@ void setup(void)
   fetchAmbient();
   printData();
 
-  if (digitalRead(Sleep_pin) == HIGH) 
-  {
-    ESP.deepSleep(sleepTimeS * 1000000, WAKE_RF_DEFAULT); // Sleep
-  }
-} //END setup()
-
-void loop(void)
-{
-
+  delay(10000);
 }
