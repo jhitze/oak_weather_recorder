@@ -69,7 +69,7 @@ void fetchPressure()
 void printData()
 {
   char tmpStr[64];
-  sprintf(tmpStr, "weather;%s;%s;%s;%s", String(temperature).c_str(), String(ambient).c_str(), String(pressure).c_str(), String(humidity).c_str());
+  sprintf(tmpStr, "weather;temp-%s;ambient-%s;pressue-%s;humidity-%s", String(temperature).c_str(), String(ambient).c_str(), String(pressure).c_str(), String(humidity).c_str());
   Particle.publish("weatherstation", tmpStr, 60, PRIVATE);
 }
 
