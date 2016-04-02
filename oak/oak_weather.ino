@@ -13,7 +13,7 @@
 HTU21D htu;
 SFE_BMP180 bmp;
 
-#define ALTITUDE 509 //Altitude in meter
+#define ALTITUDE 210 //Altitude in meter
 #define PCF8591 (0x90 >> 1) //I2C bus address
 #define ADC0 0x00 //ADC0
 
