@@ -1,6 +1,0 @@
-- [x] use settings file rather than passed in as URL
-- [ ] store data in mysql for use later
-- [X] move model to its own file
-- [ ] Handle if person soldered light sensor backwards (maybe in settings file?)
-- [x] Use Particle API to get access code; this way it requires just username/password as start up (or in settings), and can fetch its own access code for the device.
-- [x] As long as we are using the Particle API, why not have a selectable device too?
