@@ -9,6 +9,7 @@
 #include <Wire.h>
 #include "SparkFunHTU21D.h"
 #include "SFE_BMP180.h"
+#include <ArduinoJson.h>
 
 HTU21D htu;
 SFE_BMP180 bmp;
@@ -73,6 +74,21 @@ void printData()
   Particle.publish("weatherstation", tmpStr, 60, PRIVATE);
 }
 
+void publishJson()
+{
+  char jsonString[1000];
+
+  StaticJsonBuffer<1000> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  root["temperature"] = temperature;
+  root["ambient"] = ambient;
+  root["pressure"] = pressure;
+  root["humidity"] = humidity;
+  root.printTo(jsonString, sizeof(jsonString));
+  
+  Particle.publish("weatherstationJSON", jsonString, 60, PRIVATE);
+}
+
 void fetchAmbient()
 {
   byte value0;
@@ -103,6 +119,7 @@ void loop(void)
   fetchPressure();
   fetchAmbient();
   printData();
+  publishJson();
 
   delay(10000);
 }
