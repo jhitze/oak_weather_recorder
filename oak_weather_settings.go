@@ -6,6 +6,17 @@ import (
 	"io/ioutil"
 )
 
+func loadSettings() OakWeatherSettings {
+	settings, err := findSettingsFromFile()
+	if err != nil {
+		logger.Println("Could not read settings file. reason:", err)
+		logger.Println("Reverting to asking for the settings.")
+		settings, _ = askForSettings()
+		saveSettings(*settings)
+	}
+	return *settings
+}
+
 func askForSettings() (*OakWeatherSettings, error) {
 	settings := OakWeatherSettings{}
 	var username, password string
@@ -20,7 +31,7 @@ func askForSettings() (*OakWeatherSettings, error) {
 	return &settings, nil
 }
 
-func findSettings() (*OakWeatherSettings, error) {
+func findSettingsFromFile() (*OakWeatherSettings, error) {
 	settings := OakWeatherSettings{}
 	filename := "oak_weather.json"
 	logger.Println("Going to attempt to load data from", filename)

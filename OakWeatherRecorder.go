@@ -13,20 +13,10 @@ var urlFormat, deviceId string
 func init() {
 	logger = log.New(os.Stdout, "", log.LstdFlags|log.Lmicroseconds)
 	urlFormat = "https://api.particle.io/v1/devices/%s/events/?access_token=%s"
-
 }
 
 func main() {
-	settings := &OakWeatherSettings{}
-	var err error
-	settings, err = findSettings()
-	if err != nil {
-		logger.Println("Could not read settings file. reason:", err)
-		logger.Println("Reverting to asking for the settings.")
-		settings, err = askForSettings()
-		saveSettings(*settings)
-	}
-
+	settings := loadSettings()
 	events_channel := openConnectionForWeatherEvents(settings.SelectedDevice, settings.AccessToken)
 	listenForWeatherEvents(events_channel)
 }
