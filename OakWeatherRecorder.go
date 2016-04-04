@@ -27,10 +27,11 @@ func main() {
 		saveSettings(*settings)
 	}
 
-	listenForWeatherEvents(settings.SelectedDevice, settings.AccessToken)
+	events_channel := openConnectionForWeatherEvents(settings.SelectedDevice, settings.AccessToken)
+	listenForWeatherEvents(events_channel)
 }
 
-func listenForWeatherEvents(device Device, accessToken string) {
+func openConnectionForWeatherEvents(device Device, accessToken string) chan sseclient.Event {
 	url := fmt.Sprintf(urlFormat, device.Id, accessToken)
 	events, err := sseclient.OpenURL(url)
 	if err != nil {
@@ -38,6 +39,10 @@ func listenForWeatherEvents(device Device, accessToken string) {
 		os.Exit(1)
 	}
 	logger.Printf("Connected to the stream of device %s (%s)", device.Name, device.Id)
+	return events
+}
+
+func listenForWeatherEvents(events chan sseclient.Event) {
 	for event := range events {
 		if event.Name == "weatherstationJSON" {
 			data_decoded := NewWeatherData(event.Data)
