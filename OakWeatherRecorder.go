@@ -39,7 +39,11 @@ func listenForWeatherEvents(device Device, accessToken string) {
 	}
 	logger.Printf("Connected to the stream of device %s (%s)", device.Name, device.Id)
 	for event := range events {
-		data_decoded := NewWeatherData(event.Data)
-		logger.Println(data_decoded.asString())
+		if event.Name == "weatherstationJSON" {
+			data_decoded := NewWeatherData(event.Data)
+			if data_decoded != nil {
+				logger.Println(data_decoded.asString())
+			}
+		}
 	}
 }

@@ -1,9 +1,8 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"strconv"
-	"strings"
 )
 
 type WeatherData struct {
@@ -22,30 +21,17 @@ func (wd WeatherData) ambientPercentage() float64 {
 	return (256 - wd.Ambient) / 256 * 100
 }
 
-func NewWeatherData(data map[string]interface{}) WeatherData {
+func NewWeatherData(data map[string]interface{}) *WeatherData {
 	var weatherData WeatherData
 	for key, value := range data {
 		if key == "data" {
-			weather_variables := strings.Split(value.(string), ";")
-			for _, variable := range weather_variables {
-				split_weather_variable := strings.Split(variable, "-")
-				switch split_weather_variable[0] {
-				case "temp":
-					weatherData.Temperature, _ = strconv.ParseFloat(split_weather_variable[1], 64)
-				case "ambient":
-					weatherData.Ambient, _ = strconv.ParseFloat(split_weather_variable[1], 64)
-				case "pressue":
-					weatherData.Pressure, _ = strconv.ParseFloat(split_weather_variable[1], 64)
-				case "humidity":
-					weatherData.Humidity, _ = strconv.ParseFloat(split_weather_variable[1], 64)
-				case "weather":
-					break
-				default:
-					logger.Println("Ignored:", split_weather_variable)
-				}
-
+			jsonerr := json.Unmarshal([]byte(value.(string)), &weatherData)
+			if jsonerr != nil {
+				logger.Println("Error unmarshalling the weatherJSON response:", jsonerr)
+				logger.Println("Server sent:", value)
+				return nil
 			}
 		}
 	}
-	return weatherData
+	return &weatherData
 }
