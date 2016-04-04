@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/peterhellberg/sseclient"
 	"log"
 	"os"
@@ -12,24 +11,13 @@ var urlFormat, deviceId string
 
 func init() {
 	logger = log.New(os.Stdout, "", log.LstdFlags|log.Lmicroseconds)
-	urlFormat = "https://api.particle.io/v1/devices/%s/events/?access_token=%s"
+
 }
 
 func main() {
 	settings := loadSettings()
 	events_channel := openConnectionForWeatherEvents(settings.SelectedDevice, settings.AccessToken)
 	listenForWeatherEvents(events_channel)
-}
-
-func openConnectionForWeatherEvents(device Device, accessToken string) chan sseclient.Event {
-	url := fmt.Sprintf(urlFormat, device.Id, accessToken)
-	events, err := sseclient.OpenURL(url)
-	if err != nil {
-		logger.Println("Error:", err)
-		os.Exit(1)
-	}
-	logger.Printf("Connected to the stream of device %s (%s)", device.Name, device.Id)
-	return events
 }
 
 func listenForWeatherEvents(events chan sseclient.Event) {
