@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jhitze/oak_weather_recorder.svg?branch=master)](https://travis-ci.org/jhitze/oak_weather_recorder)
+
 # Oak Weather Recorder
 The neatest way to record data published over from the Oak Shield over the Particle network.
 
