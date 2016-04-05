@@ -37,11 +37,13 @@ func findSettingsFromFile() (*OakWeatherSettings, error) {
 	logger.Println("Going to attempt to load data from", filename)
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
+		logger.Println("Could not read settings file. reason:", err)
 		return nil, err
 	}
 
 	err = json.Unmarshal(data, &settings)
 	if err != nil {
+		logger.Println("Could not read settings file. reason:", err)
 		return nil, err
 	}
 

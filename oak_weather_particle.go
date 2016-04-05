@@ -87,15 +87,21 @@ func retrieveDevice(accessToken, deviceId string) (*Device, error) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
+	if err != nil {
+		logger.Println("Could not find device. reason:", err)
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		logger.Println("Could not find device. reason:", err)
 		return nil, err
 	}
 
 	jsonerr := json.Unmarshal(body, &device)
 	if jsonerr != nil {
+		logger.Println("Could not find device. reason:", err)
 		return nil, jsonerr
 	}
 
