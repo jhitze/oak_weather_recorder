@@ -10,6 +10,7 @@ https://github.com/who93/oak_weathershield
 
 ```
 go get github.com/jhitze/oak-weather
+go get github.com/peterhellberg/sseclient
 cd oak-weather
 go build *.go 
 ```
@@ -17,6 +18,11 @@ go build *.go
 ## How to run
 ```
 ./OakWeatherRecorder
+```
+
+## How to test
+```
+go test
 ```
 
 ## In action
