@@ -3,9 +3,12 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
+	"github.com/peterhellberg/sseclient"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 )
 
 func retrieveAccessToken(username, password string) string {
@@ -84,19 +87,37 @@ func retrieveDevice(accessToken, deviceId string) (*Device, error) {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
+	if err != nil {
+		logger.Println("Could not find device. reason:", err)
+		return nil, err
+	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		logger.Println("Could not find device. reason:", err)
 		return nil, err
 	}
 
 	jsonerr := json.Unmarshal(body, &device)
 	if jsonerr != nil {
+		logger.Println("Could not find device. reason:", err)
 		return nil, jsonerr
 	}
 
 	return &device, nil
+}
+
+func openConnectionForWeatherEvents(device Device, accessToken string) chan sseclient.Event {
+	urlFormat = "https://api.particle.io/v1/devices/%s/events/?access_token=%s"
+	url := fmt.Sprintf(urlFormat, device.Id, accessToken)
+	events, err := sseclient.OpenURL(url)
+	if err != nil {
+		logger.Println("Error:", err)
+		os.Exit(1)
+	}
+	logger.Printf("Connected to the stream of device %s (%s)", device.Name, device.Id)
+	return events
 }
 
 type OauthTokenResponse struct {

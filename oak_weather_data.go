@@ -23,8 +23,10 @@ func (wd WeatherData) ambientPercentage() float64 {
 
 func NewWeatherData(data map[string]interface{}) *WeatherData {
 	var weatherData WeatherData
+	var foundData bool
 	for key, value := range data {
 		if key == "data" {
+			foundData = true
 			jsonerr := json.Unmarshal([]byte(value.(string)), &weatherData)
 			if jsonerr != nil {
 				logger.Println("Error unmarshalling the weatherJSON response:", jsonerr)
@@ -32,6 +34,9 @@ func NewWeatherData(data map[string]interface{}) *WeatherData {
 				return nil
 			}
 		}
+	}
+	if foundData == false {
+		return nil
 	}
 	return &weatherData
 }
